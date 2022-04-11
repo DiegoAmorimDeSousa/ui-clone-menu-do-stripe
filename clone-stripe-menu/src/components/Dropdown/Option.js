@@ -23,11 +23,68 @@ export function DropdownOption({ name, content: Content, backgroundHeight }){
   } = useContext(Context);
 
   useEffect(() => {
-    
-  }, []);
+    if(!registered && optionDimensions) {
+      const WrapperContent = () => {
+        const contentRef = useRef();
+
+        useEffect(() => {
+          const contentDimensions = contentRef.current.getBoundingClientRect();
+          updateOptionProps(id, { contentDimensions })
+        }, []);
+
+        return (
+          <div ref={contentRef}>
+            <Content />
+          </div>
+        )
+      }
+
+      registerOption({
+        id,
+        optionDimensions,
+        optionCenterX: optionDimensions.x + optionDimensions.width / 2,
+        WrapperContent,
+        backgroundHeight
+      });
+
+      setRegistered(true);
+    } else if (registered && optionDimensions) {
+      updateOptionProps(id, {
+        optionDimensions,
+        optionCenterX: optionDimensions.x + optionDimensions.width / 2,
+      })
+    }
+  }, [
+    registerOption, 
+    id, 
+    registered,
+    optionDimensions,
+    updateOptionProps,
+    deleteOptionById,
+    backgroundHeight,  
+  ]);
+
+  const handleOpen = () => setTargetId(id);
+  const handleClose = () => setTargetId(null);
+  const handleTouch = () => (window.isMobile = true);
+
+  const handleClick = (e) => {
+    e.preventDefault();
+
+    return targetId === id ? handleClose() : handleOpen();
+  }
 
   return (
-    <motion.button className="dropdown-option">
+    <motion.button 
+      className="dropdown-option"
+      ref={optionsHook}
+      onMouseDown={handleClick}
+      onHoverStart={() => !window.isMobile && handleOpen()}
+      onHoverEnd={() => !window.isMobile && handleClose()}
+      onTouchStar={handleTouch}
+      onFocus={handleOpen}
+      onBlur={handleClose}
+    >
       {name}
     </motion.button>
   )

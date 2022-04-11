@@ -23,4 +23,23 @@ export const DropdownStyles = styled.div`
       opacity: 0.55;
     }
   }
+
+  .dropdown-root {
+    z-index: 10;
+    position: absolute;
+  }
+
+  .dropdown-arrow {
+
+  }
+
+  .dropdown-container {
+    position: absolute;
+    overflow: hidden;
+    box-shadow: -3px -3px 5px rgba(82, 95, 127, 0.04);
+  }
+
+  .dropdown-section {
+    position: absolute;
+  }
 `;
